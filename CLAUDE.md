@@ -19,19 +19,60 @@ No test runner is configured yet. When added, it will be Vitest + React Testing 
 
 **Routing:** `BrowserRouter` in `src/App.tsx` defines all routes. `RootLayout` is a layout route (no `path`) that wraps all pages via `<Outlet />`.
 
+**Full-bleed layout:** `RootLayout`'s `<main>` has no max-width constraint — each page owns its own section widths. Pages use alternating full-width `<section>` elements with `mx-auto max-w-6xl px-6` containers inside. This enables dark/light band sections that span the viewport.
+
+**Current routes** (defined in `App.tsx`):
+
+| Path             | Component           | Description                |
+|------------------|---------------------|----------------------------|
+| `/`              | `HomePage`          | Landing page               |
+| `/gallery`       | `GalleryPage`       | Artwork grid, links to detail |
+| `/artwork/:id`   | `ArtworkDetailPage` | Single artwork view        |
+| `/about`         | `AboutPage`         | Gallery info & team        |
+| `/contact`       | `ContactPage`       | Contact form               |
+
+**Navigation:** Nav links are defined in the `NAV_LINKS` constant at the top of `RootLayout.tsx`. To add a nav link, add to this array — it feeds the desktop nav, mobile menu, and footer.
+
+**Static data layer:** Artwork data lives in `src/data/artworks.ts` as a `const` array (`ARTWORKS`). Pages import and consume this directly — there is no backend or API yet. To add a new data source, create a new file in `src/data/` with a typed constant array.
+
+**Detail page pattern:** `ArtworkDetailPage` uses `useParams` to extract the route `:id`, looks up the artwork from `ARTWORKS`, and renders `<ArtworkNotFound />` if not found. Follow this pattern for future detail routes.
+
 **Adding a new page:**
 1. Create `src/pages/NewPage.tsx` with a default export
 2. Add a `<Route>` inside the `<Route element={<RootLayout />}>` block in `App.tsx`
-3. Add a `<Link>` to the nav in `src/layouts/RootLayout.tsx`
+3. Add an entry to `NAV_LINKS` in `src/layouts/RootLayout.tsx`
 
 **Folder conventions:**
 - `src/pages/` — routable page components (one per route)
-- `src/components/` — shared, reusable UI components
+- `src/components/` — shared, reusable UI components (`SectionHeading`, `GeometricDecor`)
 - `src/layouts/` — shell components using `<Outlet />`
+- `src/data/` — static data arrays (e.g., `artworks.ts` exports `ARTWORKS`)
+- `src/types/` — shared TypeScript interfaces
 - `src/assets/` — images/SVGs imported by components
 - `src/hooks/` — shared custom hooks (when created)
-- `src/types/` — shared TypeScript interfaces (when created)
 - `src/utils/` — pure utility functions, no React imports (when created)
+
+## Design System
+
+**Aesthetic:** Neo-modern — clean lines, bold typography, generous whitespace, dark/light section contrast, geometric decorative accents.
+
+**Theme tokens** are defined in `@theme` block in `src/index.css`:
+- Colors: `gallery-950` through `gallery-50` (dark to light neutrals), `accent` / `accent-light` / `accent-dark` (gold)
+- Fonts: `font-display` (Playfair Display — headings), `font-body` (Inter — body text)
+- Google Fonts are loaded via CDN in `index.html`
+
+**Section pattern:** Every page section follows this structure:
+```tsx
+<section className="relative overflow-hidden bg-gallery-950 py-24">
+  <GeometricDecor />  {/* optional decorative shapes */}
+  <div className="relative mx-auto max-w-6xl px-6">
+    <SectionHeading title="..." subtitle="..." isDark />
+    {/* content */}
+  </div>
+</section>
+```
+
+Alternate between `bg-gallery-950` (dark, `text-white`) and `bg-white` (light) sections. Use `SectionHeading` for consistent section titles with gold accent divider.
 
 ## Key Conventions
 
@@ -39,13 +80,13 @@ No test runner is configured yet. When added, it will be Vitest + React Testing 
 - Function declarations with default exports; no `React.FC`
 - Props defined as `interface` directly above the component
 - Tailwind CSS v4 utility-first styling — no component-scoped CSS files; Tailwind is a Vite plugin (no `tailwind.config.js`)
-- Custom theme tokens go in `@theme` block in `src/index.css`
 - Never use `any`; use `unknown` and narrow instead
 - Prefer `interface` for object shapes, `type` for unions/intersections
 - Use `import type` for type-only imports (`verbatimModuleSyntax` enforced)
 - Event handlers: prefix with `handle` in owner component, callback props with `on`
 - Booleans: prefix with `is`, `has`, `should`, `can`
 - Constants: `UPPER_SNAKE_CASE` for compile-time constants, `camelCase` for runtime
+- Static data (artworks, events, team members) defined as `const` arrays at module top
 
 ## Document-Driven Development
 
