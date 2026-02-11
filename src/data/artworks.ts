@@ -77,4 +77,24 @@ export const ARTWORKS: Artwork[] = [
     description:
       'A serene impressionist landscape depicting rolling countryside hills at golden hour. A winding river meanders through wildflower-dotted meadows as warm amber light bathes the scene, evoking the loose brushstrokes and atmospheric depth of the classic Impressionist masters.',
   },
+  {
+    id: 8,
+    title: 'Vibrance in Form',
+    artist: 'AI Generated',
+    year: '2026',
+    medium: 'Digital — Abstract',
+    imageUrl: '/artwork/geometric.jpg',
+    description:
+      'A vibrant abstract composition of bold overlapping geometric shapes — triangles, circles, and rectangles — rendered in electric blue, fiery red, golden yellow, and deep purple. The dynamic arrangement evokes the energy of modern abstract expressionism with clean, sharp edges.',
+  },
+  {
+    id: 9,
+    title: 'Cosmic Genesis',
+    artist: 'AI Generated',
+    year: '2026',
+    medium: 'Digital Art',
+    imageUrl: '/artwork/cosmic.jpg',
+    description:
+      'A dramatic cosmic scene featuring a luminous supernova at its center, surrounded by swirling galaxies and distant stars. Deep space purples, electric cyans, and magenta hues pulse with neon energy across the infinite expanse of the universe.',
+  },
 ];
