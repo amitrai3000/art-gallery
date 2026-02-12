@@ -33,7 +33,9 @@ No test runner is configured yet. When added, it will be Vitest + React Testing 
 
 **Navigation:** Nav links are defined in the `NAV_LINKS` constant at the top of `RootLayout.tsx`. To add a nav link, add to this array — it feeds the desktop nav, mobile menu, and footer.
 
-**Static data layer:** Artwork data lives in `src/data/artworks.ts` as a `const` array (`ARTWORKS`). Pages import and consume this directly — there is no backend or API yet. To add a new data source, create a new file in `src/data/` with a typed constant array.
+**Static data layer:** Artwork data lives in `src/data/artworks.ts` as a `const` array (`ARTWORKS`). Pages import and consume this directly — there is no backend or API yet. To add a new data source, create a new file in `src/data/` with a typed constant array and a corresponding interface in `src/types/`.
+
+**Images:** Artwork images use two patterns — external URLs (Wikimedia Commons for classic artworks) and local files in `public/artwork/` (referenced as `/artwork/*.jpg` in data). New local artwork images go in `public/artwork/`.
 
 **Detail page pattern:** `ArtworkDetailPage` uses `useParams` to extract the route `:id`, looks up the artwork from `ARTWORKS`, and renders `<ArtworkNotFound />` if not found. Follow this pattern for future detail routes.
 
@@ -44,13 +46,11 @@ No test runner is configured yet. When added, it will be Vitest + React Testing 
 
 **Folder conventions:**
 - `src/pages/` — routable page components (one per route)
-- `src/components/` — shared, reusable UI components (`SectionHeading`, `GeometricDecor`)
+- `src/components/` — shared, reusable UI components (`SectionHeading`, `GeometricDecor`, `ArtworkNotFound`)
 - `src/layouts/` — shell components using `<Outlet />`
 - `src/data/` — static data arrays (e.g., `artworks.ts` exports `ARTWORKS`)
-- `src/types/` — shared TypeScript interfaces
+- `src/types/` — shared TypeScript interfaces (`Artwork`, `Event`, `TeamMember`, `CarouselSlide`)
 - `src/assets/` — images/SVGs imported by components
-- `src/hooks/` — shared custom hooks (when created)
-- `src/utils/` — pure utility functions, no React imports (when created)
 
 ## Design System
 
@@ -79,7 +79,7 @@ Alternate between `bg-gallery-950` (dark, `text-white`) and `bg-white` (light) s
 - One component per file; filename matches the default export (PascalCase)
 - Function declarations with default exports; no `React.FC`
 - Props defined as `interface` directly above the component
-- Tailwind CSS v4 utility-first styling — no component-scoped CSS files; Tailwind is a Vite plugin (no `tailwind.config.js`)
+- Tailwind CSS v4 utility-first styling — no `tailwind.config.js`; Tailwind is a Vite plugin, custom theme via `@theme` in `src/index.css`
 - Never use `any`; use `unknown` and narrow instead
 - Prefer `interface` for object shapes, `type` for unions/intersections
 - Use `import type` for type-only imports (`verbatimModuleSyntax` enforced)
@@ -87,6 +87,14 @@ Alternate between `bg-gallery-950` (dark, `text-white`) and `bg-white` (light) s
 - Booleans: prefix with `is`, `has`, `should`, `can`
 - Constants: `UPPER_SNAKE_CASE` for compile-time constants, `camelCase` for runtime
 - Static data (artworks, events, team members) defined as `const` arrays at module top
+
+**Import ordering** (groups separated by blank lines):
+1. React (`react`, `react-dom`)
+2. External libraries (`react-router-dom`, npm packages)
+3. Parent imports (`../`)
+4. Sibling/local imports (`./`)
+5. Type-only imports (`import type { ... }`)
+6. Side-effect imports (CSS)
 
 ## Document-Driven Development
 
